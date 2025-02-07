@@ -38,10 +38,10 @@ export function VideoDialog({ open, onOpenChange, region }: VideoDialogProps) {
     setGenerating(true)
 
     // Simulate video generation delay
-    await new Promise((resolve) => setTimeout(resolve, 3000))
+    await new Promise((resolve) => setTimeout(resolve, 1000))
 
     // ✅ Google Drive Direct Link (Replace 'YOUR_FILE_ID' with actual file ID)
-    const driveFileId = "1DKQQgo3V9D-kRv9b_TRKsh0VXr7loxfh" // Replace with your actual file ID
+    const driveFileId = "1ScKaP6RhN2SVhGaq0kgq80vVYc7EpyDu" // Replace with your actual file ID
     const generatedVideoPath = `https://drive.google.com/uc?export=download&id=${driveFileId}`
 
     setVideoUrl(generatedVideoPath)
@@ -94,7 +94,7 @@ export function VideoDialog({ open, onOpenChange, region }: VideoDialogProps) {
         ) : (
          <div className="flex flex-col items-center gap-4 min-w-[1000] max-w-7xl p-4 rounded-lg shadow-lg">
   <iframe
-    src="https://drive.google.com/file/d/1DKQQgo3V9D-kRv9b_TRKsh0VXr7loxfh/preview"
+    src="https://drive.google.com/file/d/1ScKaP6RhN2SVhGaq0kgq80vVYc7EpyDu/preview"
     className="w-full h-[400px] rounded-lg"
     allow="autoplay"
   ></iframe>
