@@ -49,7 +49,8 @@ export function AnalysisPanel() {
               <div className="space-y-6">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Elevation Profile</div>
-                  <div className="h-32 bg-muted rounded-md" />
+                  <img src="/elev.png" alt="Elevation Profile" className="h-32 w-full rounded-md object-cover" />
+      
                   <div className="text-xs text-muted-foreground">
                     Current elevation: {regionData.elevation.toFixed(2)} m/px
                   </div>
@@ -115,9 +116,11 @@ export function AnalysisPanel() {
                 </div>
 
                 <div className="space-y-2">
-                  <div className="text-sm font-medium">Mineral Distribution</div>
-                  <div className="h-48 bg-muted rounded-md" />
-                </div>
+        <div className="text-sm font-medium">Mineral Distribution</div>
+        {/* 🏞 Mineral Distribution Image */}
+        <img src="/mineral.png" alt="Mineral Distribution" className="h-48 w-full rounded-md object-cover" />
+      </div>
+    
               </div>
             </ScrollArea>
           </TabsContent>
