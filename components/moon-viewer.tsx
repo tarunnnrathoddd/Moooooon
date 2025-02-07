@@ -3,7 +3,7 @@
 import { useRef, useState, useCallback } from "react"
 import * as THREE from "three"
 import { OrbitControls } from "@react-three/drei"
-import { Canvas } from "@react-three/fiber"
+import { Canvas, useFrame } from "@react-three/fiber"
 import { Environment, useTexture } from "@react-three/drei"
 import { VideoDialog } from "./video-dialog"
 
@@ -18,10 +18,15 @@ interface MoonProps {
 }
 
 function Moon({ onRegionSelect }: MoonProps) {
-  const moonTexture = useTexture(
-    "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-02-06%20at%2012.19.23%E2%80%AFAM-vuMeqR3eUBUESu6pnU9AqitDy7EgLt.png",
-  )
+  const moonTexture = useTexture("/image4.png")
   const meshRef = useRef<THREE.Mesh>(null)
+
+  // 🔄 Smooth, Slower Rotation
+  useFrame(() => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += 0.0015 // Adjust speed for realism
+    }
+  })
 
   const handleClick = useCallback(
     (event: THREE.Intersection) => {
@@ -40,22 +45,10 @@ function Moon({ onRegionSelect }: MoonProps) {
       else if (longitude > 270) regionName = "West Region"
       else regionName = "Equatorial Region"
 
-      onRegionSelect({
-        name: regionName,
-        latitude,
-        longitude,
-      })
+      onRegionSelect({ name: regionName, latitude, longitude })
     },
     [onRegionSelect],
   )
-
-  const materialProps = {
-    map: moonTexture,
-    roughness: 0.9,
-    metalness: 0.1,
-    bumpScale: 0.02,
-    side: THREE.DoubleSide,
-  }
 
   return (
     <mesh
@@ -65,8 +58,18 @@ function Moon({ onRegionSelect }: MoonProps) {
         handleClick(e.intersections[0])
       }}
     >
-      <sphereGeometry args={[2, 128, 128]} />
-      <meshStandardMaterial {...materialProps} />
+      <sphereGeometry args={[3, 128, 128]} />
+
+      {/* 🌕 More Realistic Moon Material */}
+      <meshStandardMaterial 
+        map={moonTexture}  
+        roughness={0.9}  // Reduces shininess  
+        metalness={0}  // Ensures non-metallic look
+        transparent={true}  
+        opacity={2}  // Softens the texture
+        emissive={"#808080"}  // Adds moon glow  
+        emissiveIntensity={0.1}  // Controls brightness  
+      />
     </mesh>
   )
 }
@@ -74,19 +77,22 @@ function Moon({ onRegionSelect }: MoonProps) {
 function Scene({ onRegionSelect }: { onRegionSelect: (region: Region) => void }) {
   return (
     <>
-      <ambientLight intensity={0.2} />
-      <pointLight position={[10, 10, 10]} intensity={0.5} />
-      <directionalLight position={[5, 5, 5]} intensity={1} castShadow />
+      {/* 🌕 Soft, Realistic Lighting */}
+      <ambientLight intensity={0.5} color={0x404040} /> {/* Soft white light */}
+      <directionalLight position={[5, 5, 5]} intensity={1} color="white" />
+
       <Moon onRegionSelect={onRegionSelect} />
+
       <OrbitControls
         enableDamping
-        dampingFactor={0.05}
-        rotateSpeed={0.5}
-        zoomSpeed={1.2}
+        dampingFactor={0.1}
+        rotateSpeed={0.2}
+        zoomSpeed={1}
         minDistance={3}
         maxDistance={20}
         maxPolarAngle={Math.PI * 0.9}
       />
+
       <Environment preset="night" />
     </>
   )
@@ -103,20 +109,18 @@ export function MoonViewer() {
 
   return (
     <>
-      <div className="w-full h-screen">
+      {/* 🎨 Increased Canvas Width */}
+      <div className="w-[900px] h-screen">
         <Canvas
-          camera={{ position: [0, 0, 5], fov: 45 }}
+          camera={{ position: [-3, 0, 10], fov: 45 }} // Adjusted for better view
           className="bg-black"
-          gl={{
-            antialias: true,
-            pixelRatio: Math.min(2, window.devicePixelRatio),
-          }}
+          gl={{ antialias: true, pixelRatio: Math.min(2, window.devicePixelRatio) }}
         >
           <Scene onRegionSelect={handleRegionSelect} />
         </Canvas>
       </div>
+
       {selectedRegion && <VideoDialog open={showDialog} onOpenChange={setShowDialog} region={selectedRegion} />}
     </>
   )
 }
-
