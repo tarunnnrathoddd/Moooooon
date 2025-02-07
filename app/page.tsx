@@ -2,7 +2,7 @@
 
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { AnalysisSidebar } from "@/components/sidebar"
-import { MoonViewer } from "@/components/moon-viewer"
+import  {MoonViewer}  from "@/components/moon-viewer"
 import { AnalysisPanel } from "@/components/analysis-panel"
 
 export default function Home() {
